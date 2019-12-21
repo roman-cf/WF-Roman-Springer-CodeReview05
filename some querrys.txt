@@ -1,0 +1,5 @@
+Which car types are reservated to be picedup an station with id 2 (karlsplatz)
+
+SELECT reservation.station_id, reservation.car_type_id
+FROM reservation, car_type
+WHERE reservation.station_id = 2;
