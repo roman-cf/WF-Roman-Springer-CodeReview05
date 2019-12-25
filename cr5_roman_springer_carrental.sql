@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Erstellungszeit: 21. Dez 2019 um 14:45
+-- Erstellungszeit: 25. Dez 2019 um 19:53
 -- Server-Version: 10.4.10-MariaDB
 -- PHP-Version: 7.3.12
 
@@ -88,43 +88,42 @@ CREATE TABLE `customer` (
   `zip` int(11) DEFAULT NULL,
   `city` varchar(128) DEFAULT NULL,
   `country` varchar(3) DEFAULT NULL,
-  `private` tinyint(4) DEFAULT NULL
+  `firstname` varchar(128) DEFAULT NULL,
+  `mail` varchar(128) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Daten für Tabelle `customer`
 --
 
-INSERT INTO `customer` (`ID`, `name`, `company`, `address`, `phone`, `zip`, `city`, `country`, `private`) VALUES
-(1, 'Thomas Rauner', 'Code Factory', 'Kettenbrückengasse 23', '+4212345678', 1050, 'Wien', 'AUT', 0),
-(2, 'Max Muster', 'Siemens', 'Siemensstrasse 99', '+43123456789', 1000, 'Wien', 'AUT', 0),
-(3, 'Michael Dentaner', '', 'Ostermayergasse 56', '+431987654321', 1150, 'Wien', 'AUT', 1);
+INSERT INTO `customer` (`ID`, `name`, `company`, `address`, `phone`, `zip`, `city`, `country`, `firstname`, `mail`) VALUES
+(1, 'Thomas Rauner', 'Code Factory', 'Kettenbrückengasse 23', '+4212345678', 1050, 'Wien', 'AUT', NULL, NULL),
+(2, 'Max Muster', 'Siemens', 'Siemensstrasse 99', '+43123456789', 1000, 'Wien', 'AUT', NULL, NULL),
+(3, 'Michael Dentaner', '', 'Ostermayergasse 56', '+431987654321', 1150, 'Wien', 'AUT', NULL, NULL);
 
 -- --------------------------------------------------------
 
 --
--- Tabellenstruktur für Tabelle `driver`
+-- Tabellenstruktur für Tabelle `drvlcns`
 --
 
-CREATE TABLE `driver` (
+CREATE TABLE `drvlcns` (
   `ID` int(11) NOT NULL,
   `customer_id` int(11) DEFAULT NULL,
-  `drv_lcns_type` varchar(3) DEFAULT NULL,
-  `name` varchar(128) DEFAULT NULL,
-  `firstname` varchar(128) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL,
-  `phone` varchar(16) DEFAULT NULL,
-  `mail` varchar(128) DEFAULT NULL
+  `typeA` char(4) DEFAULT NULL,
+  `typeB` char(4) DEFAULT NULL,
+  `typeC` char(4) DEFAULT NULL,
+  `typeE` char(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Daten für Tabelle `driver`
+-- Daten für Tabelle `drvlcns`
 --
 
-INSERT INTO `driver` (`ID`, `customer_id`, `drv_lcns_type`, `name`, `firstname`, `address`, `phone`, `mail`) VALUES
-(1, 3, 'B', 'Dentaner', 'Michael', 'Ostermayergasse 56', '+431987654321', 'm.d@mail.all'),
-(2, 1, 'B', 'Zimmer', 'Klaus', 'Reumannplatz 13', '+43987654345', 'klaus.zimmer@aon.at'),
-(3, 2, 'C', 'Zehetner', 'Phillipp', 'Steingasse 28', '+4332889390209', 'p.zehtner@siemens.at');
+INSERT INTO `drvlcns` (`ID`, `customer_id`, `typeA`, `typeB`, `typeC`, `typeE`) VALUES
+(1, 3, 'A', 'B', 'C', ''),
+(2, 2, '', 'B', 'C', ''),
+(3, 1, '', 'B', '', '');
 
 -- --------------------------------------------------------
 
@@ -194,7 +193,8 @@ CREATE TABLE `reservation` (
 INSERT INTO `reservation` (`ID`, `starttime`, `endtime`, `car_type_id`, `customer_id`, `station_id`) VALUES
 (1, '2019-12-20 00:00:00', '2019-12-30 00:00:00', 3, 3, 1),
 (3, '2019-12-20 00:00:00', '2019-12-29 00:00:00', 2, 1, 2),
-(4, '2019-12-22 00:00:00', '2019-12-29 00:00:00', 2, 2, 2);
+(4, '2019-12-22 00:00:00', '2019-12-29 00:00:00', 2, 2, 2),
+(5, '2019-12-27 00:00:00', '2019-12-29 00:00:00', 6, 1, 2);
 
 -- --------------------------------------------------------
 
@@ -242,9 +242,9 @@ ALTER TABLE `customer`
   ADD PRIMARY KEY (`ID`);
 
 --
--- Indizes für die Tabelle `driver`
+-- Indizes für die Tabelle `drvlcns`
 --
-ALTER TABLE `driver`
+ALTER TABLE `drvlcns`
   ADD PRIMARY KEY (`ID`),
   ADD KEY `customer_id` (`customer_id`);
 
@@ -305,9 +305,9 @@ ALTER TABLE `customer`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
--- AUTO_INCREMENT für Tabelle `driver`
+-- AUTO_INCREMENT für Tabelle `drvlcns`
 --
-ALTER TABLE `driver`
+ALTER TABLE `drvlcns`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
@@ -326,7 +326,7 @@ ALTER TABLE `rental`
 -- AUTO_INCREMENT für Tabelle `reservation`
 --
 ALTER TABLE `reservation`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT für Tabelle `station`
@@ -345,10 +345,10 @@ ALTER TABLE `car`
   ADD CONSTRAINT `car_ibfk_1` FOREIGN KEY (`type_id`) REFERENCES `car_type` (`id`);
 
 --
--- Constraints der Tabelle `driver`
+-- Constraints der Tabelle `drvlcns`
 --
-ALTER TABLE `driver`
-  ADD CONSTRAINT `driver_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`ID`);
+ALTER TABLE `drvlcns`
+  ADD CONSTRAINT `drvlcns_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`ID`);
 
 --
 -- Constraints der Tabelle `invoice`
@@ -363,7 +363,6 @@ ALTER TABLE `invoice`
 ALTER TABLE `rental`
   ADD CONSTRAINT `rental_ibfk_1` FOREIGN KEY (`car_id`) REFERENCES `car` (`id`),
   ADD CONSTRAINT `rental_ibfk_2` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`ID`),
-  ADD CONSTRAINT `rental_ibfk_3` FOREIGN KEY (`driver_id`) REFERENCES `driver` (`ID`),
   ADD CONSTRAINT `rental_ibfk_4` FOREIGN KEY (`picup_station_id`) REFERENCES `station` (`ID`),
   ADD CONSTRAINT `rental_ibfk_5` FOREIGN KEY (`return_station_id`) REFERENCES `station` (`ID`);
 

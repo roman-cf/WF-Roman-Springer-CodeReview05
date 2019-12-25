@@ -1,5 +1,32 @@
-Which car types are reservated to be picedup an station with id 2 (karlsplatz)
+-----------------------------------------------
+Which car types are reservated to be picedup at station with id 2 (karlsplatz)
 
 SELECT reservation.station_id, reservation.car_type_id
 FROM reservation, car_type
 WHERE reservation.station_id = 2;
+
+-----------------------------------------------
+Shows the names of customers who made a reservation in the futur an display name of cartype:
+
+SELECT reservation.customer_id, customer.name, car_type.type_name
+FROM reservation
+INNER JOIN customer on reservation.customer_id = customer.ID
+INNER JOIN car_type on reservation.car_type_id = car_type.id
+WHERE reservation.starttime > CURRENT_DATE;
+
+-----------------------------------------------
+Show customer names who make a reservation for a cartype "Kombi" (ID3):
+
+SELECT reservation.customer_id, customer.name
+FROM reservation
+INNER JOIN customer on reservation.customer_id = customer.ID
+WHERE car_type_id = 3;
+
+-----------------------------------------------
+Show which station needs which type of car an how many to manage the reservation
+
+SELECT COUNT(*) as anzahl, station.address, car_type.type_name
+FROM reservation
+INNER JOIN car_type on reservation.car_type_id = car_type.id
+INNER JOIN station on reservation.station_id = station.ID
+GROUP BY station.address;
