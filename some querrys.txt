@@ -30,3 +30,23 @@ FROM reservation
 INNER JOIN car_type on reservation.car_type_id = car_type.id
 INNER JOIN station on reservation.station_id = station.ID
 GROUP BY station.address;
+
+-----------------------------------------------
+Show reservations with name and their drivinglicense and the car type they have reservated:
+
+SELECT reservation.customer_id, customer.name, drvlcns.typeB, drvlcns.typeC, car_type.type_name, car_type.licence_group
+FROM reservation
+INNER JOIN customer on reservation.customer_id = customer.ID
+INNER JOIN car_type on reservation.car_type_id = car_type.id
+INNER JOIN drvlcns ON reservation.customer_id = drvlcns.customer_id;
+
+-----------------------------------------------
+
+Show customers who haven't the right driving license for the reservated car type:
+
+SELECT reservation.customer_id, customer.name, drvlcns.typeB, drvlcns.typeC, car_type.type_name, car_type.licence_group
+FROM reservation
+INNER JOIN customer on reservation.customer_id = customer.ID
+INNER JOIN car_type on reservation.car_type_id = car_type.id
+INNER JOIN drvlcns ON reservation.customer_id = drvlcns.customer_id
+WHERE NOT drvlcns.typeB = car_type.licence_group OR drvlcns.typeC = car_type.licence_group;
